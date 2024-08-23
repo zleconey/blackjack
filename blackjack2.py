@@ -76,7 +76,7 @@ class Hand:
         self.cards = []
         self.bet = bet
 def getShoe():
-    newShoe = deck + deck + deck + deck
+    newShoe = deck + deck2 + deck3 +deck4
     random.shuffle(newShoe)
     return newShoe
 def getPlayers():
@@ -147,6 +147,9 @@ def canSplit(player):
     else:
         return False
 deck = getDeck()
+deck2 = getDeck()
+deck3 = getDeck()
+deck4 = getDeck()
 table,dealer = startGame()
 """playerList = getPlayers()   #creates list of player objs"""
 player1 = Player("Zack",500)
@@ -172,7 +175,7 @@ if checkBj(dealer) == True:
         if checkBj(player) == True:
             print(f"{player.name} has blackjack.")
             print(f"{player.name} pushes")
-            player.paywin(1)
+            player.payWin(1)
         else:
             print(f"{player.name} losses")
             player.payLoss()
@@ -180,6 +183,7 @@ if checkBj(dealer) == True:
 else:
     pass
 playerMoveDict = {"hit":1,"h":1,"stand":2,"s":2,"double":3,"d":3,"split":4,"sp":4}
+
 for player in playerList:
     isPlayerTurn = True
     if checkBj(player) == True:
@@ -211,22 +215,30 @@ for player in playerList:
             player.hand.bet *= 2
             print(f"{player.name} doubles bet to {player.hand.bet}")
             player.draw(table.shoe)
+            if checkBust(player) == True:
+                player.payLoss()
+                isPlayerTurn = False
+            else:
+                pass
             isPlayerTurn = False
         else:
             pass
                 #run player.split   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     print(f"{player.name} turn over")
 
-dealerHandTotal = 0
+dealerHandTotal = 0  #make dealer flip face down card
 for card in dealer.hand.cards:
     dealerHandTotal += card.trueVal
-while dealerHandTotal < 17:
+while dealer.hand.handtotal() < 17:
     print(f"{dealer.name} has {dealerHandTotal}. {dealer.name} hits")
     dealer.draw(table.shoe)
+    dealer.hand.handtotal()
+
 if checkBust(dealer) == True:
     print("dealer has busts")
 else:
     print(f"{dealer.name} has {dealerHandTotal}")
+
 
 
 
